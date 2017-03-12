@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Some of Seans Websites</title>
+</head>
+<body>
+
+    <div>
+        <h2>Websites</h2>
+        <ul id="websites" />
+    </div>
+    <div>
+        <h2>Search by ID</h2>
+        <input type="text" id="websiteId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="website" />
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+    var uri = 'http://127.0.0.1:8080/api/websites';
+
+    $(document).ready(function () {
+        // Send an AJAX request
+
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#websites'));
+            });
+          });
+    });
+
+    function formatItem(item) {
+      return item.Name + ': ' + item.Description;
+    }
+
+    function find() {
+      var id = $('#websiteId').val();
+      $.getJSON(uri + '/' + id)
+          .done(function (data) {
+            $('#website').text(formatItem(data));
+          })
+          .fail(function (jqXHR, textStatus, err) {
+            $('#website').text('Error: ' + err);
+          });
+    }
+    </script>
+</body>
+</html>
